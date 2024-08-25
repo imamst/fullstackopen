@@ -13,6 +13,14 @@ const App = () => {
   const addPerson = (e) => {
     e.preventDefault()
 
+    const isNameAlreadyExists = Boolean(persons.find((person) => person.name == newName)?.name)
+
+    if (isNameAlreadyExists) {
+      alert(`${newName} is already add to phonebook`)
+
+      return
+    }
+
     setPersons([
       ...persons,
       {
