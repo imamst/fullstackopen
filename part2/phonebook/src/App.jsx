@@ -54,7 +54,7 @@ const App = () => {
   const searchPerson = (e) => {
     setFilteredPersons(
       persons.filter(
-        person => person.name.includes(e.target.value)
+        person => person.name?.toLowerCase()?.includes(e.target.value)
       )
     )
   }
@@ -63,28 +63,55 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <div>
-        filter shown with: <input onChange={searchPerson} />
-      </div>
+      <Filter onChange={searchPerson}/>
 
       <br />
+      
+      <h3><b>Add a new</b></h3>
 
-      <form onSubmit={addPerson}>
-        <h1><b>add a new</b></h1>
-        <div>
-          name: <input value={newName} onChange={handleChangeName} />
-        </div>
-        <div>
-          number: <input value={newNumber} onChange={handleChangeNumber} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <PersonForm
+        onSubmit={addPerson}
+        newName={newName}
+        onChangeInputName={handleChangeName}
+        newNumber={newNumber}
+        onChangeInputNumber={handleChangeNumber}
+      />
+
+      <h3>Numbers</h3>
+
+      <Persons persons={filteredPersons} />
+    </div>
+  )
+}
+
+const Filter = ({ onChange }) => {
+  return (
+    <div>
+      filter shown with: <input onChange={onChange} />
+    </div>
+  )
+}
+
+const PersonForm = ({onSubmit, newName, onChangeInputName, newNumber, onChangeInputNumber}) => {
+  return (
+    <form onSubmit={onSubmit}>
       <div>
-        {filteredPersons.map((person) => <p key={person.id}>{person.name} {person.number}</p>)}
+        name: <input required value={newName} onChange={onChangeInputName} />
       </div>
+      <div>
+        number: <input value={newNumber} onChange={onChangeInputNumber} />
+      </div>
+      <div>
+        <button type="submit">add</button>
+      </div>
+    </form>
+  )
+}
+
+const Persons = ({ persons }) => {
+  return (
+    <div>
+      {persons?.map((person) => <p key={person.id}>{person.name} {person.number}</p>)}
     </div>
   )
 }
