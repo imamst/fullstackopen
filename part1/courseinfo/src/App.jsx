@@ -13,31 +13,37 @@ const App = () => {
       {
         name: 'State of a component',
         exercises: 14
-      }
+      },
     ]
   }
 
   return (
+    <Course course={course} />
+  )
+}
+
+const Course = ({ course }) => {
+  return (
     <div>
-      <Header course={course.name} />
+      <Header name={course.name} />
       <Content content={course.parts} />
       <Total parts={course.parts} />
     </div>
   )
 }
 
-const Header = (props) => {
-  return <h1>{props.course}</h1>
+const Header = ({ name }) => {
+  return <h1>{name}</h1>
 }
-const Content = (props) => {
+const Content = ({ content }) => {
   return <>
-    {props.content.map((content, index) => <Part key={index} text={`${content.name} ${content.exercises}`} />)}
+    {content.map((content, index) => <Part key={index} text={`${content.name} ${content.exercises}`} />)}
   </>
 }
-const Total = (props) => {
-  return <p>Number of exercises {props.parts?.reduce((acc, part) => part.exercises + acc, 0)}</p>
+const Total = ({ parts }) => {
+  return <p>Number of exercises {parts?.reduce((acc, part) => part.exercises + acc, 0)}</p>
 }
-const Part = (props) => {
-  return <p>{props.text}</p>
+const Part = ({ text }) => {
+  return <p>{text}</p>
 }
 export default App
