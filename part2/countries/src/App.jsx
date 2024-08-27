@@ -6,6 +6,7 @@ function App() {
   const [countries, setCountries] = useState([])
   const [filteredCountries, setFilteredCountries] = useState([])
   const [countryDetail, setCountryDetail] = useState(null)
+  const [countryCapitalWeatherDetail, setCountryCapitalWeatherDetail] = useState(null)
 
   useEffect(() => {
     countryService
@@ -40,6 +41,18 @@ function App() {
     }
   }, [filteredCountries])
 
+  const getWeatherCity = (city) => {
+    if (!city) return
+
+    countryService
+      .getWeatherDetail(city)
+      .then(({data}) => setCountryCapitalWeatherDetail(data))
+  }
+
+  useEffect(() => {
+    getWeatherCity(countryDetail?.capital[0])
+  }, [countryDetail])
+
   return (
     <>
       <div>
@@ -62,22 +75,22 @@ function App() {
 
       {
         countryDetail && (
-          <CountryDetail data={countryDetail}/>
+          <CountryDetail data={countryDetail} weather={countryCapitalWeatherDetail}/>
         )
       }
     </>
   )
 }
 
-const CountryDetail = ({ data }) => {
+const CountryDetail = ({ data, weather }) => {
   return (
     <div>
       <h2>{data?.name?.common}</h2>
 
-      <p>capital: {data?.capital[0]}</p>
-      <p>area: {data?.area}</p>
+      <p>Capital: {data?.capital[0]}</p>
+      <p>Area: {data?.area}</p>
 
-      <p><b>languages:</b></p>
+      <p><b>Languages:</b></p>
       <ul>
         {
           Object.keys(data?.languages)?.map((code) => <li key={code}>{data?.languages[code]}</li>)
@@ -85,6 +98,14 @@ const CountryDetail = ({ data }) => {
       </ul>
 
       <img src={data?.flags?.png} alt={data?.flags?.alt} />
+
+      <h4><b>Weather in {data.capital[0]}</b></h4>
+
+      <p>Temperature {weather?.main?.temp} Celcius</p>
+
+      <img src={`https://openweathermap.org/img/wn/${weather?.weather[0]?.icon}@2x.png`} alt={weather?.weather[0]?.description} />
+
+      <p>Wind {weather?.wind?.speed} m/s</p>
     </div>
   )
 }
