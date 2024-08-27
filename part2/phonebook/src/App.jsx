@@ -65,6 +65,19 @@ const App = () => {
       })
   }, [])
 
+  const onDeletePerson = personToDelete => {
+    if (window.confirm(`Delete ${personToDelete.name} ?`)) {
+      personService
+        .destroy(personToDelete.id)
+        .then((deletedPerson) => {
+          const newPersons = persons.filter(person => person.id != deletedPerson.id)
+  
+          setPersons(newPersons)
+          setFilteredPersons(newPersons)
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -85,7 +98,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} onDelete={onDeletePerson} />
     </div>
   )
 }
@@ -114,10 +127,10 @@ const PersonForm = ({onSubmit, newName, onChangeInputName, newNumber, onChangeIn
   )
 }
 
-const Persons = ({ persons }) => {
+const Persons = ({ persons, onDelete }) => {
   return (
     <div>
-      {persons?.map((person) => <p key={person.id}>{person.name} {person.number}</p>)}
+      {persons?.map((person) => <p key={person.id}>{person.name} {person.number} <button onClick={() => onDelete(person)}>delete</button></p>)}
     </div>
   )
 }
