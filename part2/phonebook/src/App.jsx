@@ -6,6 +6,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [successMessage, setSuccessMessage] = useState()
+  const [errorMessage, setErrorMessage] = useState()
 
   const handleChangeName = (e) => {
     setNewName(e.target.value)
@@ -39,10 +40,19 @@ const App = () => {
             setNewName('')
             setNewNumber('')
           })
-          .finally(() => {
+          .then(() => {
             setSuccessMessage(`Updated ${existingPerson.name}`)
 
             setTimeout(() => setSuccessMessage(), 3000)
+          })
+          .catch(({ response }) => {
+            if (response.status == 404) {
+              setErrorMessage(`Information of ${existingPerson.name} has already been removed from the server`)
+            } else {
+              setErrorMessage('Operation failed')
+            }
+
+            setTimeout(() => setErrorMessage(), 3000)
           })
       }
 
@@ -68,7 +78,7 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
-      .finally(() => {
+      .then(() => {
         setSuccessMessage(`Added ${newName}`)
 
         setTimeout(() => setSuccessMessage(), 3000)
@@ -127,6 +137,26 @@ const App = () => {
             marginTop: 0,
             marginBottom: 0
           }}>{ successMessage }</p>
+        </div>
+      )}
+
+      { errorMessage && (
+        <div style={{
+          marginTop: '1rem',
+          marginBottom: '1rem',
+          backgroundColor: '#fee2e2',
+          borderRadius: '10px',
+          width: '50%',
+          padding: '1rem'
+        }
+        }>
+          <p style={{
+            fontSize: '1.2rem',
+            fontWeight: '600',
+            color: '#b91c1c',
+            marginTop: 0,
+            marginBottom: 0
+          }}>{ errorMessage }</p>
         </div>
       )}
 
