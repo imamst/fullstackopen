@@ -3,22 +3,22 @@ import axios from "axios";
 const baseUrl = 'http://localhost:3001/persons';
 
 const getAll = () => {
-  return axios.get('http://localhost:3001/persons')
+  return axios.get(baseUrl)
     .then(response => response.data)
 }
 
 const create = newPerson => {
-  return axios.post('http://localhost:3001/persons', newPerson)
+  return axios.post(baseUrl, newPerson)
     .then(response => response.data)
 }
 
 const update = (updatedPersonId, updatedPersonData) => {
-  return axios.put(`http://localhost:3001/persons/${updatedPersonId}`, updatedPersonData)
+  return axios.put(`${baseUrl}/${updatedPersonId}`, updatedPersonData)
     .then(response => response.data)
 }
 
 const destroy = personId => {
-  return axios.delete(`http://localhost:3001/persons/${personId}`)
+  return axios.delete(`${baseUrl}/${personId}`)
     .then(response => response.data)
 }
 
