@@ -5,7 +5,6 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [newId, setNewId] = useState(persons?.length)
 
   const handleChangeName = (e) => {
     setNewName(e.target.value)
@@ -27,23 +26,25 @@ const App = () => {
       return
     }
 
-    // entry new data if pass validation
-    const newPersons = [
-      ...persons,
-      {
-        id: newId + 1,
+    axios
+      .post('http://localhost:3001/persons', {
         name: newName,
         number: newNumber,
-      }
-    ]
+      })
+      .then(response => {
+        // entry new data if pass validation
+        const newPersons = [
+          ...persons,
+          response.data
+        ]
 
-    setPersons(newPersons)
-    setFilteredPersons(newPersons)
+        setPersons(newPersons)
+        setFilteredPersons(newPersons)
 
-    // clear form and set new id
-    setNewId(prev => prev + 1)
-    setNewName('')
-    setNewNumber('')
+        // clear form
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const [filteredPersons, setFilteredPersons] = useState(persons)
