@@ -14,6 +14,8 @@ function App() {
   }, [])
   
   const searchCountries = (keyword) => {
+    setCountryDetail(null)
+
     if (!keyword) {
       setFilteredCountries(countries)
 
@@ -51,7 +53,11 @@ function App() {
 
       {
         filteredCountries.length > 1 && filteredCountries.length <= 10 &&
-        filteredCountries.map(country => <p key={country.tld}><b>{country.name?.common}</b></p>)
+        filteredCountries.map(
+          country => <p key={country.tld}>
+            <b>{country.name?.common}</b> <button onClick={() => setCountryDetail(country)}>show</button>
+          </p>
+        )
       }
 
       {
