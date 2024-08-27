@@ -5,6 +5,7 @@ const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [successMessage, setSuccessMessage] = useState()
 
   const handleChangeName = (e) => {
     setNewName(e.target.value)
@@ -38,6 +39,11 @@ const App = () => {
             setNewName('')
             setNewNumber('')
           })
+          .finally(() => {
+            setSuccessMessage(`Updated ${existingPerson.name}`)
+
+            setTimeout(() => setSuccessMessage(), 3000)
+          })
       }
 
       return
@@ -61,6 +67,11 @@ const App = () => {
         // clear form
         setNewName('')
         setNewNumber('')
+      })
+      .finally(() => {
+        setSuccessMessage(`Added ${newName}`)
+
+        setTimeout(() => setSuccessMessage(), 3000)
       })
   }
 
@@ -98,6 +109,26 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      { successMessage && (
+        <div style={{
+          marginTop: '1rem',
+          marginBottom: '1rem',
+          backgroundColor: '#dcfce7',
+          borderRadius: '10px',
+          width: '50%',
+          padding: '1rem'
+        }
+        }>
+          <p style={{
+            fontSize: '1.2rem',
+            fontWeight: '600',
+            color: '#15803d',
+            marginTop: 0,
+            marginBottom: 0
+          }}>{ successMessage }</p>
+        </div>
+      )}
 
       <Filter onChange={searchPerson}/>
 
