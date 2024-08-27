@@ -12,6 +12,11 @@ const create = newPerson => {
     .then(response => response.data)
 }
 
+const update = (updatedPersonId, updatedPersonData) => {
+  return axios.put(`http://localhost:3001/persons/${updatedPersonId}`, updatedPersonData)
+    .then(response => response.data)
+}
+
 const destroy = personId => {
   return axios.delete(`http://localhost:3001/persons/${personId}`)
     .then(response => response.data)
@@ -20,5 +25,6 @@ const destroy = personId => {
 export default {
   getAll,
   create,
-  destroy
+  update,
+  destroy,
 }

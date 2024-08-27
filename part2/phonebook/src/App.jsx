@@ -18,10 +18,27 @@ const App = () => {
     e.preventDefault()
 
     // unique name validation
-    const isNameAlreadyExists = Boolean(persons.find((person) => person.name == newName)?.name)
+    const existingPerson = persons.find((person) => person.name == newName)
 
-    if (isNameAlreadyExists) {
-      alert(`${newName} is already add to phonebook`)
+    if (existingPerson) {
+      if (window.confirm(`${existingPerson.name} is already add to phonebook, replace the old number with a new one?`)) {
+        personService
+          .update(existingPerson.id, {
+            name: existingPerson.name,
+            number: newNumber,
+          })
+          .then(updatedPerson => {
+            // entry new data if pass validation
+            const newPersons = persons.map(person => person.id == updatedPerson.id ? updatedPerson : person)
+
+            setPersons(newPersons)
+            setFilteredPersons(newPersons)
+
+            // clear form
+            setNewName('')
+            setNewNumber('')
+          })
+      }
 
       return
     }
