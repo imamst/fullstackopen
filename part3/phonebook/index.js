@@ -33,6 +33,20 @@ app.get('/api/persons', (request, response) => {
 app.post('/api/persons', (request, response) => {
   const payload = request.body
 
+  if (!payload?.name) {
+    return response.status(400).json({
+      error: 'name missing'
+    })
+  }
+
+  const isNameAlreadyExists = Boolean(persons.find(person => person?.name?.toLowerCase() == payload?.name?.toLowerCase())?.id)
+
+  if (isNameAlreadyExists) {
+    return response.status(400).json({
+      error: 'name must be unique'
+    })
+  }
+
   const newPerson = {
     id: Math.ceil(Math.random() * (9999 - 5) + 0).toString(),
     name: payload.name,
