@@ -28,6 +28,17 @@ app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
+app.get('/api/persons/:id', (request, response) => {
+  const id = request.params.id
+  const person = persons.find(person => person.id === id)
+
+  if (person) {
+    response.json(person)
+  } else {
+    response.status(404).end()
+  }
+})
+
 app.get('/info', (request, response) => {
   const options = {
     weekday: 'long',       // Day of the week (e.g., Wednesday)
@@ -40,7 +51,7 @@ app.get('/info', (request, response) => {
     timeZoneName: 'long'   // Full time zone name (e.g., Greenwich Mean Time)
   };
   const time = new Date().toLocaleString('en-US', options);
-  
+
   response.send(`Phonebook has info for ${persons.length} people <br/> ${time}`)
 })
 
