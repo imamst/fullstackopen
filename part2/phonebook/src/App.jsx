@@ -64,13 +64,7 @@ const App = () => {
         name: newName,
         number: newNumber,
       })
-      .then(newPerson => {
-        // entry new data if pass validation
-        const newPersons = [
-          ...persons,
-          newPerson
-        ]
-
+      .then(newPersons => {
         setPersons(newPersons)
         setFilteredPersons(newPersons)
 
