@@ -32,6 +32,9 @@ let persons = [
 ]
 
 app.get('/api/persons', (request, response) => {
+  // add breakpoint here
+  console.log(persons)
+
   response.json(persons)
 })
 
