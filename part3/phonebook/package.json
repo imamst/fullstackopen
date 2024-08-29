@@ -10,13 +10,15 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "@powershell Remove-Item -Recurse -Force dist && cd ../../part2/phonebook && npm run build && @powershell Copy-Item dist -Recurse ../../part3/phonebook",
     "deploy": "fly deploy",
-    "deploy:full": "npm run build:ui && npm run deploy",    
+    "deploy:full": "npm run build:ui && npm run deploy",
     "logs:prod": "fly logs"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.19.2",
+    "mongodb": "4.0",
+    "mongoose": "^8.6.0",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
