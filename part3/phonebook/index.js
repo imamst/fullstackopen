@@ -6,15 +6,15 @@ const Person = require('./models/person')
 
 const app = express()
 
-morgan.token('payload', function (req, res) { return JSON.stringify(req.body) })
+morgan.token('payload', function (req) { return JSON.stringify(req.body) })
 
-app.use(express.static('dist'));
-app.use(express.json());
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :payload'));
+app.use(express.static('dist'))
+app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :payload'))
 
 app.get('/api/persons', (request, response, next) => {
   // add breakpoint here
-  console.log("api/persons")
+  console.log('api/persons')
 
   Person.find({})
     .then(persons => {
@@ -57,16 +57,16 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const { name, number} = request.body
+  const { name, number } = request.body
 
   Person.findByIdAndUpdate(
-      request.params.id,
-      {
-        name,
-        number
-      },
-      { new: true, runValidators: true, context: 'query' }
-    )
+    request.params.id,
+    {
+      name,
+      number
+    },
+    { new: true, runValidators: true, context: 'query' }
+  )
     .then(updatedNote => {
       response.json(updatedNote)
     })
@@ -92,8 +92,8 @@ app.get('/info', (request, response, next) => {
     minute: 'numeric',     // Minute (e.g., 30)
     second: 'numeric',     // Second (e.g., 15)
     timeZoneName: 'long'   // Full time zone name (e.g., Greenwich Mean Time)
-  };
-  const time = new Date().toLocaleString('en-US', options);
+  }
+  const time = new Date().toLocaleString('en-US', options)
 
   Person.countDocuments()
     .then(total => {
@@ -109,11 +109,11 @@ const unknownEndpoint = (request, response) => {
 // handler of requests with unknown endpoint
 app.use(unknownEndpoint)
 
-const errorHandling = (error, request, response, next) => {
+const errorHandling = (error, request, response) => {
   console.log(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
