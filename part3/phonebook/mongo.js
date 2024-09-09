@@ -9,9 +9,8 @@ const password = process.argv[2]
 const name = process.argv[3]
 const number = process.argv[4]
 
-// still dummy url
 const url =
-  `mongodb+srv://fullstack:${password}@cluster0.o1opl.mongodb.net/phonebookApp?retryWrites=true&w=majority`
+  `mongodb+srv://onestia96:${password}@cluster0.0pqsp.mongodb.net/phonebookApp?retryWrites=true&w=majority&appName=Cluster0`
 
 mongoose.set('strictQuery', false)
 
@@ -32,8 +31,6 @@ const person = new Person({
 
 person.save().then(result => {
   console.log(`Added ${name} number ${number} to phonebook`)
-
-  mongoose.connection.close()
 })
 
 // retrieve all person data
@@ -44,4 +41,3 @@ Person.find({}).then(result => {
   })
   mongoose.connection.close()
 })
-
