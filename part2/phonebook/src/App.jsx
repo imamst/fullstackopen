@@ -29,12 +29,8 @@ const App = () => {
             name: existingPerson.name,
             number: newNumber,
           })
-          .then(updatedPerson => {
-            // entry new data if pass validation
-            const newPersons = persons.map(person => person.id == updatedPerson.id ? updatedPerson : person)
-
-            setPersons(newPersons)
-            setFilteredPersons(newPersons)
+          .then(() => {
+            fetchAllPerson()
 
             // clear form
             setNewName('')
@@ -64,9 +60,8 @@ const App = () => {
         name: newName,
         number: newNumber,
       })
-      .then(newPersons => {
-        setPersons(newPersons)
-        setFilteredPersons(newPersons)
+      .then(() => {
+        fetchAllPerson()
 
         // clear form
         setNewName('')
@@ -88,25 +83,24 @@ const App = () => {
     )
   }
 
-  useEffect(() => {
+  const fetchAllPerson = () => {
     personService
       .getAll()
       .then(persons => {
         setPersons(persons)
         setFilteredPersons(persons)
       })
+  }
+
+  useEffect(() => {
+    fetchAllPerson()
   }, [])
 
   const onDeletePerson = personToDelete => {
     if (window.confirm(`Delete ${personToDelete.name} ?`)) {
       personService
         .destroy(personToDelete.id)
-        .then((deletedPerson) => {
-          const newPersons = persons.filter(person => person.id != deletedPerson.id)
-  
-          setPersons(newPersons)
-          setFilteredPersons(newPersons)
-        })
+        .then(() => fetchAllPerson())
     }
   }
 

@@ -16,9 +16,10 @@ app.get('/api/persons', (request, response) => {
   // add breakpoint here
   console.log("api/persons")
 
-  Person.find({}).then(persons => {
-    response.json(persons)
-  })
+  Person.find({})
+    .then(persons => {
+      response.json(persons)
+    })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -30,44 +31,49 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  // const isNameAlreadyExists = Boolean(persons.find(person => person?.name?.toLowerCase() == payload?.name?.toLowerCase())?.id)
-
-  // if (isNameAlreadyExists) {
-  //   return response.status(400).json({
-  //     error: 'name must be unique'
-  //   })
-  // }
-
   const newPerson = new Person({
-    id: Math.ceil(Math.random() * (9999 - 5) + 0).toString(),
     name: payload.name,
     number: payload.number
   })
 
-  newPerson.save().then(result => {
-    response.json(result)
-  })
+  newPerson.save()
+    .then(result => {
+      response.json(result)
+    })
 })
 
-app.get('/api/persons/:id', (request, response) => {
-  Person.findById(request.params.id).then(person => {
-    if (person) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => {
-    console.log(error)
-    response.status(400).send({ error: 'malformatted id' })
-  })
+app.get('/api/persons/:id', (request, response, next) => {
+  Person.findById(request.params.id)
+    .then(person => {
+      if (person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const payload = request.body
+
+  Person.findByIdAndUpdate(request.params.id, {
+      name: payload.name,
+      number: payload.number
+    })
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  Person.findByIdAndDelete(id).then(() => {
-    response.status(204).end()
-  })
+  Person.findByIdAndDelete(id)
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
 app.get('/info', (request, response) => {
@@ -83,10 +89,28 @@ app.get('/info', (request, response) => {
   };
   const time = new Date().toLocaleString('en-US', options);
 
-  Person.countDocuments().then(total => {
-    response.send(`Phonebook has info for ${total} people <br/> ${time}`)
-  })
+  Person.countDocuments()
+    .then(total => {
+      response.send(`Phonebook has info for ${total} people <br/> ${time}`)
+    })
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+// handler of requests with unknown endpoint
+app.use(unknownEndpoint)
+
+const errorHandling = (error, request, response, next) => {
+  console.log(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id'})
+  }
+}
+
+app.use(errorHandling)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
