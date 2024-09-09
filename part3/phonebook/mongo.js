@@ -29,13 +29,13 @@ const person = new Person({
   number
 })
 
-person.save().then(result => {
+person.save().then(() => {
   console.log(`Added ${name} number ${number} to phonebook`)
 })
 
 // retrieve all person data
 Person.find({}).then(result => {
-  console.log("phonebook:")
+  console.log('phonebook:')
   result.forEach(person => {
     console.log(`${person.name} ${person.number}`)
   })
