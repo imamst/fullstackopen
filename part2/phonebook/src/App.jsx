@@ -36,19 +36,17 @@ const App = () => {
             setNewName('')
             setNewNumber('')
           })
-          .then(() => {
-            setSuccessMessage(`Updated ${existingPerson.name}`)
-
-            setTimeout(() => setSuccessMessage(), 3000)
-          })
+          .then(() => setSuccessMessage(`Updated ${existingPerson.name}`))
           .catch(({ response }) => {
             if (response.status == 404) {
               setErrorMessage(`Information of ${existingPerson.name} has already been removed from the server`)
             } else {
               setErrorMessage('Operation failed')
             }
-
-            setTimeout(() => setErrorMessage(), 3000)
+          })
+          .finally(() => {
+            setTimeout(() => setSuccessMessage(), 3000)
+            setTimeout(() => setErrorMessage(), 5000)
           })
       }
 
@@ -67,13 +65,11 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
-      .then(() => {
-        setSuccessMessage(`Added ${newName}`)
-
+      .then(() => setSuccessMessage(`Added ${newName}`))
+      .catch(error => setErrorMessage(error.response.data.error))
+      .finally(() => {
         setTimeout(() => setSuccessMessage(), 3000)
-      })
-      .catch(error => {
-        setErrorMessage(error.response.data.error)
+        setTimeout(() => setErrorMessage(), 5000)
       })
   }
 
@@ -104,6 +100,12 @@ const App = () => {
       personService
         .destroy(personToDelete.id)
         .then(() => fetchAllPerson())
+        .then(() => setSuccessMessage(`Deleted ${personToDelete.name}`))
+        .catch(error => setErrorMessage(error.response.data.error))
+        .finally(() => {
+          setTimeout(() => setSuccessMessage(), 3000)
+          setTimeout(() => setErrorMessage(), 5000)
+        })
     }
   }
 
