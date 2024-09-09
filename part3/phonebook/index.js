@@ -1,5 +1,9 @@
+require('dotenv').config()
+
 const express = require('express')
 const morgan = require('morgan')
+const Person = require('./models/person')
+
 const app = express()
 
 morgan.token('payload', function (req, res) { return JSON.stringify(req.body) })
@@ -8,34 +12,13 @@ app.use(express.static('dist'));
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :payload'));
 
-let persons = [
-  { 
-    "id": "1",
-    "name": "Arto Hellas", 
-    "number": "040-123456"
-  },
-  { 
-    "id": "2",
-    "name": "Ada Lovelace", 
-    "number": "39-44-5323523"
-  },
-  { 
-    "id": "3",
-    "name": "Dan Abramov", 
-    "number": "12-43-234345"
-  },
-  { 
-    "id": "4",
-    "name": "Mary Poppendieck", 
-    "number": "39-23-6423122"
-  }
-]
-
 app.get('/api/persons', (request, response) => {
   // add breakpoint here
-  console.log(persons)
+  console.log("api/persons")
 
-  response.json(persons)
+  Person.find({}).then(persons => {
+    response.json(persons)
+  })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -47,41 +30,36 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  const isNameAlreadyExists = Boolean(persons.find(person => person?.name?.toLowerCase() == payload?.name?.toLowerCase())?.id)
+  // const isNameAlreadyExists = Boolean(persons.find(person => person?.name?.toLowerCase() == payload?.name?.toLowerCase())?.id)
 
-  if (isNameAlreadyExists) {
-    return response.status(400).json({
-      error: 'name must be unique'
-    })
-  }
+  // if (isNameAlreadyExists) {
+  //   return response.status(400).json({
+  //     error: 'name must be unique'
+  //   })
+  // }
 
-  const newPerson = {
+  const newPerson = new Person({
     id: Math.ceil(Math.random() * (9999 - 5) + 0).toString(),
     name: payload.name,
     number: payload.number
-  }
+  })
 
-  persons = persons.concat(newPerson)
-
-  response.json(persons)
+  newPerson.save().then(result => {
+    response.json(result)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  const person = persons.find(person => person.id === id)
-
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  Person.findById(request.params.id).then(note => {
+    response.json(note)
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
-  persons = persons.filter(person => person.id !== id)
-
-  response.status(204).end()
+  Person.findByIdAndDelete(id).then(() => {
+    response.status(204).end()
+  })
 })
 
 app.get('/info', (request, response) => {
@@ -97,7 +75,9 @@ app.get('/info', (request, response) => {
   };
   const time = new Date().toLocaleString('en-US', options);
 
-  response.send(`Phonebook has info for ${persons.length} people <br/> ${time}`)
+  Person.countDocuments().then(total => {
+    response.send(`Phonebook has info for ${total} people <br/> ${time}`)
+  })
 })
 
 const PORT = process.env.PORT || 3001
