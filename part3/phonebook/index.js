@@ -12,7 +12,7 @@ app.use(express.static('dist'));
 app.use(express.json());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :payload'));
 
-app.get('/api/persons', (request, response) => {
+app.get('/api/persons', (request, response, next) => {
   // add breakpoint here
   console.log("api/persons")
 
@@ -20,9 +20,10 @@ app.get('/api/persons', (request, response) => {
     .then(persons => {
       response.json(persons)
     })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
   const payload = request.body
 
   if (!payload?.name) {
@@ -40,6 +41,7 @@ app.post('/api/persons', (request, response) => {
     .then(result => {
       response.json(result)
     })
+    .catch(error => next(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -55,19 +57,23 @@ app.get('/api/persons/:id', (request, response, next) => {
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-  const payload = request.body
+  const { name, number} = request.body
 
-  Person.findByIdAndUpdate(request.params.id, {
-      name: payload.name,
-      number: payload.number
-    })
+  Person.findByIdAndUpdate(
+      request.params.id,
+      {
+        name,
+        number
+      },
+      { new: true, runValidators: true, context: 'query' }
+    )
     .then(updatedNote => {
       response.json(updatedNote)
     })
     .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   const id = request.params.id
   Person.findByIdAndDelete(id)
     .then(() => {
@@ -76,7 +82,7 @@ app.delete('/api/persons/:id', (request, response) => {
     .catch(error => next(error))
 })
 
-app.get('/info', (request, response) => {
+app.get('/info', (request, response, next) => {
   const options = {
     weekday: 'long',       // Day of the week (e.g., Wednesday)
     year: 'numeric',       // Year (e.g., 2024)
@@ -93,6 +99,7 @@ app.get('/info', (request, response) => {
     .then(total => {
       response.send(`Phonebook has info for ${total} people <br/> ${time}`)
     })
+    .catch(error => next(error))
 })
 
 const unknownEndpoint = (request, response) => {
@@ -107,6 +114,8 @@ const errorHandling = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id'})
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
 }
 
