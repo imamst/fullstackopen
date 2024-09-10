@@ -1,0 +1,12 @@
+GET http://localhost:3001/api/blogs HTTP/1.1
+
+###
+POST http://localhost:3001/api/blogs/ HTTP/1.1
+content-type: application/json
+
+{
+  "title": "The Easiest Way to Success Before You Born",
+  "author": "Imam Setiawan",
+  "url": "http://google.co.id",
+  "likes": 79
+}

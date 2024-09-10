@@ -1,0 +1,22 @@
+GET http://localhost:3001/api/persons HTTP/1.1
+
+###
+GET http://localhost:3001/api/per HTTP/1.1
+
+###
+GET http://localhost:3001/info HTTP/1.1
+
+###
+GET http://localhost:3001/api/persons/66de947fa7d4ec7d75e9bec1 HTTP/1.1
+
+###
+POST http://localhost:3001/api/persons/ HTTP/1.1
+content-type: application/json
+
+{
+  "name": "sa",
+  "number": "111-111-111-111"
+}
+
+###
+DELETE http://localhost:3001/api/persons/66de99bba1cec583384ad526

@@ -1,0 +1,3 @@
+- npm init
+- install nodemon (dev), cors, dotenv, express, mongodb, mongoose, morgan
+- 
