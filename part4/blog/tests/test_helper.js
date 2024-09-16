@@ -6,6 +6,12 @@ const initialBlogs = [
     "author": "Imam Setiawan",
     "url": "http://google.co.id",
     "likes": 79
+  },
+  {
+    "title": "Just Getting Right",
+    "author": "Imam Setiawan",
+    "url": "http://google.co.id",
+    "likes": 23
   }
 ]
 
