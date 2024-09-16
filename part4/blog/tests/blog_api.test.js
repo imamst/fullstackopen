@@ -77,6 +77,35 @@ test('blog without title is not added', async () => {
   assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 })
 
+test('a specific note can be viewed', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+
+  const blogToView = blogsAtStart[0]
+
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  assert.deepStrictEqual(resultBlog.body, blogToView)
+})
+
+test('a note can be deleted', async () => {
+  const notesAtStart = await helper.blogsInDb()
+  const noteToDelete = notesAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${noteToDelete.id}`)
+    .expect(204)
+
+  const notesAtEnd = await helper.blogsInDb()
+
+  const contents = notesAtEnd.map(r => r.title)
+  assert(!contents.includes(noteToDelete.title))
+
+  assert.strictEqual(notesAtEnd.length, helper.initialBlogs.length - 1)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
