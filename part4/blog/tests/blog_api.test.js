@@ -114,6 +114,32 @@ describe('addition of a new blog', () => {
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
   })
 
+  describe('updating a blog', () => {
+    test('succeeds with a valid id', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToUpdate = blogsAtStart[0]
+    
+      const updatedBlog = { ...blogToUpdate, likes: 100 }
+    
+      await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedBlog)
+        .expect(200)
+    
+      const blogsAtEnd = await helper.blogsInDb()
+    
+      assert.strictEqual(blogsAtEnd[0].likes, 100)
+    })
+
+    test('fails with statuscode 404 if blog does not exist', async () => {
+      const validNonexistingId = await helper.nonExistingId()
+    
+      await api
+        .put(`/api/blogs/${validNonexistingId}`)
+        .expect(404)
+    })
+  })
+
   describe('deletion of a blog', () => {
     test('succeeds with status code 204 if id is valid', async () => {
       const blogsAtStart = await helper.blogsInDb()
