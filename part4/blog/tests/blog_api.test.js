@@ -1,10 +1,20 @@
-const { test, after } = require('node:test')
+const { test, after, beforeEach } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
+const helper = require('./test_helper')
 const supertest = require('supertest')
 const app = require('../app')
 
 const api = supertest(app)
+
+const Blog = require('../models/blog')
+
+beforeEach(async () => {
+  await Blog.deleteMany({})
+
+  let blogObject = new Blog(helper.initialBlogs[0])
+  await blogObject.save()
+})
 
 test('blogs are returned as json', async () => {
   await api
@@ -13,11 +23,11 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
-// test('there are one blogs', async () => {
-//   const response = await api.get('/api/blogs')
+test('there are one blogs', async () => {
+  const response = await api.get('/api/blogs')
 
-//   assert.strictEqual(response.body.length, 1)
-// })
+  assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
 
 test('the first blog is about how to success', async () => {
   const response = await api.get('/api/blogs')
@@ -28,8 +38,6 @@ test('the first blog is about how to success', async () => {
 })
 
 test('a valid blog can be added', async () => {
-  const initialData = await api.get('/api/blogs')
-
   const newBlog = {
     "title": "Blogging is Easy",
     "author": "Imam Setiawan",
@@ -43,18 +51,16 @@ test('a valid blog can be added', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/)
   
-  const response = await api.get('/api/blogs')
+  const blogsAtEnd = await helper.blogsInDb()
 
-  const contents = response.body.map(e => e.title)
-
-  assert.strictEqual(response.body.length, initialData.body.length + 1)
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+  
+  const contents = blogsAtEnd.map(e => e.title)
 
   assert(contents.includes('Blogging is Easy'))
 })
 
 test('blog without title is not added', async () => {
-  const initialData = await api.get('/api/blogs')
-
   const newBlog = {
     "author": "Imam Setiawan",
     "url": "http://google.co.id",
@@ -66,9 +72,9 @@ test('blog without title is not added', async () => {
     .send(newBlog)
     .expect(400)
   
-  const response = await api.get('/api/blogs')
+  const blogsAtEnd = await helper.blogsInDb()
 
-  assert.strictEqual(response.body.length, initialData.body.length)
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 })
 
 after(async () => {
