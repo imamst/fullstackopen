@@ -8,5 +8,6 @@ content-type: application/json
   "title": "The Easiest Way to Success Before You Born",
   "author": "Imam Setiawan",
   "url": "http://google.co.id",
-  "likes": 79
+  "likes": 79,
+  "userId": "66eaa136e4e20083390f3d8d"
 }
