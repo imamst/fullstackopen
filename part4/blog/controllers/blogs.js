@@ -8,7 +8,7 @@ blogsRouter.get('/', async (request, response, next) => {
   if (!decodedToken) {
     return response.status(401).json({ error: 'token invalid' })
   }
-  
+
   const blogs = await Blog.find({}).populate('user')
 
   response.json(blogs);
@@ -28,7 +28,7 @@ blogsRouter.post('/', async (request, response, next) => {
   if (!decodedToken) {
     return response.status(401).json({ error: 'token invalid' })
   }
-  const user = await User.findById(body.userId)
+  const user = await User.findById(decodedToken.id)
 
   const blog = new Blog({
     title: body.title,
