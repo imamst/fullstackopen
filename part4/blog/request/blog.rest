@@ -13,3 +13,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImltY
   "url": "http://google.co.id",
   "likes": 79
 }
+
+# {
+#   "title": "The Easiest Way to Success Before You Born",
+#   "author": "Imam Setiawan",
+#   "url": "http://google.co.id",
+#   "likes": 79,
+# }
+
+# above payload will result error:
+# SyntaxError: Expected double-quoted property name in JSON at position 140
