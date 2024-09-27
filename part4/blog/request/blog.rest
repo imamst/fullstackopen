@@ -1,11 +1,11 @@
 GET http://localhost:3001/api/blogs HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImltYW1zdCIsImlkIjoiNjZlYWExMzZlNGUyMDA4MzM5MGYzZDhkIiwiaWF0IjoxNzI2ODIzOTEzfQ._57G4tv297DttZXk23hFhpc625l2vYDPYbmUFUB-yLI
+Authorization: Bearer -
 
 ###
 POST http://localhost:3001/api/blogs/ HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImltYW1zdCIsImlkIjoiNjZlYWExMzZlNGUyMDA4MzM5MGYzZDhkIiwiaWF0IjoxNzI2ODIzOTEzfQ._57G4tv297DttZXk23hFhpc625l2vYDPYbmUFUB-yLI
+Authorization: Bearer -
 
 {
   "title": "The Easiest Way to Success Before You Born",
@@ -26,4 +26,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImltY
 
 ###
 DELETE http://localhost:3001/api/blogs/66ef996cf85f4e89798baeb7 HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImltYW1zdCIsImlkIjoiNjZlYWExMzZlNGUyMDA4MzM5MGYzZDhkIiwiaWF0IjoxNzI2ODIzOTEzfQ._57G4tv297DttZXk23hFhpc625l2vYDPYbmUFUB-yLI
+Authorization: Bearer -
