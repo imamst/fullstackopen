@@ -1,5 +1,6 @@
 import { useState } from "react";
 import loginService from "../services/login";
+import blogService from "../services/blogs";
 
 const LoginForm = ({ setUser, setErrorMessage }) => {
   const [username, setUsername] = useState('');
@@ -13,6 +14,11 @@ const LoginForm = ({ setUser, setErrorMessage }) => {
         username,
         password,
       });
+
+      window.localStorage.setItem("user", JSON.stringify(user));
+
+      blogService.setToken(user.token);
+
       setUsername('');
       setPassword('');
       setUser(user);
