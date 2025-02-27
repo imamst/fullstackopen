@@ -34,27 +34,35 @@ const LoginForm = ({ setUser, setErrorMessage }) => {
 
   return (
     <div>
-      <h2>Log in to application</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          username
+      <h2 className="font-semibold text-center">Log in to application</h2>
+      <form onSubmit={handleSubmit} className="my-6">
+        <div className="flex items-center space-x-2 mb-4">
+          <label htmlFor="username">Username</label>
           <input
+            id="username"
             type="text"
             name="username"
             value={username}
             onChange={({ target }) => setUsername(target.value)}
+            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        <div>
-          password
+        <div className="flex items-center space-x-2">
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
             name="password"
             value={password}
             onChange={({ target }) => setPassword(target.value)}
+            className="w-full px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
-        <button type="submit">login</button>
+        <div className="mt-4 flex justify-end">
+          <button type="submit" className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+            Login
+          </button>
+        </div>
       </form>
     </div>
   )
