@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import blogService from "../services/blogs"
-import { Toggable } from "./Toggable";
+import Toggable from "./Toggable";
 
 export const BlogForm = ({ setIsCreated, setSuccessMessage }) => {
   // result in controlled or uncontrolled input warning, why?
