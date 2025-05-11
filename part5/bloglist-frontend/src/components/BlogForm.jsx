@@ -1,11 +1,11 @@
-import { useRef, useState } from "react";
-import blogService from "../services/blogs"
-import Toggable from "./Toggable";
+import { useRef, useState } from 'react'
+import blogService from '../services/blogs'
+import Toggable from './Toggable'
 
 export const BlogForm = ({ setIsCreated, setSuccessMessage }) => {
   // result in controlled or uncontrolled input warning, why?
   // https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable
-  // 
+  //
   // const [formData, setFormData] = useState({
   //   title: '',
   //   author: '',
@@ -27,7 +27,7 @@ export const BlogForm = ({ setIsCreated, setSuccessMessage }) => {
     e.preventDefault()
 
     blogFormRef.current.toggleVisibility()
-    
+
     try {
       const response = await blogService.create({
         title,
@@ -57,7 +57,7 @@ export const BlogForm = ({ setIsCreated, setSuccessMessage }) => {
   }
 
   const clearForm = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     setTitle('')
     setAuthor('')
@@ -117,4 +117,4 @@ export const BlogForm = ({ setIsCreated, setSuccessMessage }) => {
       </form>
     </Toggable>
   )
-};
+}

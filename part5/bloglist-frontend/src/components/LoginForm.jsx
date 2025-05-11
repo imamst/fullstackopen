@@ -1,29 +1,30 @@
-import { useState } from "react";
-import loginService from "../services/login";
-import blogService from "../services/blogs";
+import { useState } from 'react'
+import loginService from '../services/login'
+import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
 const LoginForm = ({ setUser, setErrorMessage }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       const user = await loginService.login({
         username,
         password,
-      });
+      })
 
-      window.localStorage.setItem("user", JSON.stringify(user));
+      window.localStorage.setItem('user', JSON.stringify(user))
 
-      blogService.setToken(user.token);
+      blogService.setToken(user.token)
 
-      setUsername('');
-      setPassword('');
-      setUser(user);
+      setUsername('')
+      setPassword('')
+      setUser(user)
     } catch (exception) {
-      console.error(exception);
+      console.error(exception)
 
       setErrorMessage('Wrong credentials')
       setTimeout(() => {
@@ -73,4 +74,4 @@ LoginForm.propTypes = {
   setErrorMessage: PropTypes.func.isRequired
 }
 
-export default LoginForm;
+export default LoginForm

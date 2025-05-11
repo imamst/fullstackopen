@@ -13,7 +13,7 @@ const App = () => {
   const [isUpdated, setIsUpdated] = useState(false)
 
   const logout = () => {
-    window.localStorage.removeItem("user")
+    window.localStorage.removeItem('user')
     setUser(null)
     setBlogs([])
   }
@@ -21,17 +21,17 @@ const App = () => {
   useEffect(() => {
     if (user?.token || isCreated || isUpdated) {
       blogService.getAll(user?.token)
-      .then(blogs =>
-        setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-      ).then(() => {
-        setIsCreated(false)
-        setIsUpdated(false)
-      })
+        .then(blogs =>
+          setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+        ).then(() => {
+          setIsCreated(false)
+          setIsUpdated(false)
+        })
     }
   }, [user?.token, isCreated, isUpdated])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("user")
+    const loggedUserJSON = window.localStorage.getItem('user')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
