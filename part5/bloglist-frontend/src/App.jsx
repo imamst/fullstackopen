@@ -10,6 +10,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
   const [isCreated, setIsCreated] = useState(false)
+  const [isUpdated, setIsUpdated] = useState(false)
 
   const logout = () => {
     window.localStorage.removeItem("user")
@@ -18,12 +19,16 @@ const App = () => {
   }
 
   useEffect(() => {
-    if (user?.token || isCreated) {
-      blogService.getAll(user?.token).then(blogs =>
-        setBlogs( blogs )
-      ).then(() => setIsCreated(false))
+    if (user?.token || isCreated || isUpdated) {
+      blogService.getAll(user?.token)
+      .then(blogs =>
+        setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+      ).then(() => {
+        setIsCreated(false)
+        setIsUpdated(false)
+      })
     }
-  }, [user?.token, isCreated])
+  }, [user?.token, isCreated, isUpdated])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("user")
@@ -72,7 +77,7 @@ const App = () => {
             <BlogForm setIsCreated={setIsCreated} setSuccessMessage={setSuccessMessage} />
 
             {blogs.map(blog =>
-              <Blog key={blog.id} blog={blog} />
+              <Blog key={blog.id} blog={blog} setIsUpdated={setIsUpdated} />
             )}
           </div>
         )
