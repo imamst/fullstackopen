@@ -42,6 +42,17 @@ const Blog = ({ blog, setIsUpdated }) => {
     }
   }
 
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this blog?')) {
+      try {
+        await blogService.remove(blog.id)
+        setIsUpdated(true)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
   return (
     <div style={parentStyle}>
       <div style={titleStyle}>
@@ -62,6 +73,10 @@ const Blog = ({ blog, setIsUpdated }) => {
             >like</button>
           </div>
           <p>{blog.author}</p>
+          <button
+            className="px-4 py-2 text-red-500 font-medium rounded-lg shadow-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            onClick={handleDelete}
+          >delete</button>
         </div>
       )}
     </div>
