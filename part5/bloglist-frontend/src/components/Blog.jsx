@@ -54,9 +54,12 @@ const Blog = ({ blog, setIsUpdated }) => {
   }
 
   return (
-    <div style={parentStyle}>
+    <div style={parentStyle} className='blog-container'>
       <div style={titleStyle}>
-        <span>{blog.title}</span>
+        <div className='flex flex-col gap-2'>
+          <p>{blog.title}</p>
+          <p>{blog.author}</p>
+        </div>
         <button
           onClick={toggleDetails}
           className="px-4 py-2 text-blue-500 font-medium rounded-lg shadow-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -72,7 +75,6 @@ const Blog = ({ blog, setIsUpdated }) => {
               onClick={handleLike}
             >like</button>
           </div>
-          <p>{blog.author}</p>
           <button
             className="px-4 py-2 text-red-500 font-medium rounded-lg shadow-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
             onClick={handleDelete}
