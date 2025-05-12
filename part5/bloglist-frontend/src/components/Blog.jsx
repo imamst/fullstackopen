@@ -66,7 +66,7 @@ const Blog = ({ blog, setIsUpdated }) => {
         >{detailsVisible ? 'hide' : 'view'}</button>
       </div>
       {detailsVisible && (
-        <div>
+        <div className='blog-detail'>
           <p>{blog.url}</p>
           <div style={likesStyle}>
             <p>likes {blog.likes}</p>
