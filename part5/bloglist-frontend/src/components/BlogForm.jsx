@@ -41,8 +41,6 @@ export const BlogForm = ({ setIsCreated, setSuccessMessage }) => {
 
       setIsCreated(true)
       setSuccessMessage(`a new blog ${title} by ${author} added`)
-
-      console.log(response)
     } catch (error) {
       console.log(error)
     } finally {
