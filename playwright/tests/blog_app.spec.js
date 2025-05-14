@@ -1,4 +1,5 @@
 import { test, expect, describe, beforeEach } from '@playwright/test';
+import { loginWith } from './helpers';
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -33,9 +34,7 @@ describe('Blog app', () => {
 
     describe('Login', () => {
         test('succeeds with correct credentials', async ({ page }) => {
-            await page.getByLabel('username').fill('imamst')
-            await page.getByLabel('password').fill('salainen')
-            await page.getByRole('button', { name: 'Login' }).click()
+            await loginWith(page, 'imamst', 'salainen')
 
             await expect(page.getByText('Imam Setiawan logged-in')).toBeVisible()
             await expect(page.getByText('Blogs')).toBeVisible()
@@ -44,9 +43,7 @@ describe('Blog app', () => {
         })
 
         test('fails with wrong credentials', async ({ page }) => {
-            await page.getByLabel('username').fill('imamst')
-            await page.getByLabel('password').fill('wrong')
-            await page.getByRole('button', { name: 'Login' }).click()
+            await loginWith(page, 'imamst', 'wrong')
 
             await expect(page.getByText('Wrong credentials')).toBeVisible()
         })
