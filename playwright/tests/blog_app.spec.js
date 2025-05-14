@@ -75,5 +75,28 @@ describe('Blog app', () => {
             // Verify the like count is updated
             await expect(page.getByText('likes 1', { exact: true })).toBeVisible()
         })
+
+        test('User can delete their own blog', async ({ page }) => {
+            // Create a blog
+            await createBlog(page, 'Delete Test Blog', 'Delete Test Author', 'https://playwright.dev')
+            
+            // Verify blog is visible
+            await expect(page.getByText('Delete Test Blog', { exact: true })).toBeVisible()
+            
+            // View the blog details
+            await page.getByRole('button', { name: 'view', exact: true }).click()
+            
+            // Set up dialog handler before clicking delete
+            page.on('dialog', async dialog => {
+                expect(dialog.message()).toBe('Are you sure you want to delete this blog?')
+                await dialog.accept()
+            })
+            
+            // Click delete button
+            await page.getByRole('button', { name: 'delete', exact: true }).click()
+            
+            // Verify blog is no longer visible
+            await expect(page.getByText('Delete Test Blog', { exact: true })).not.toBeVisible()
+        })
     })
 });
