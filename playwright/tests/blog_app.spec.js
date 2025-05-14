@@ -1,5 +1,5 @@
 import { test, expect, describe, beforeEach } from '@playwright/test';
-import { loginWith } from './helpers';
+import { createBlog, loginWith } from './helpers';
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -55,16 +55,25 @@ describe('Blog app', () => {
         })
         
         test('A new blog can be created', async ({ page }) => {
-            await page.getByRole('button', { name: 'create new blog', exact: true }).click()
-
-            await page.getByLabel('Title').fill('Playwright Title')
-            await page.getByLabel('Author').fill('Playwright Author')
-            await page.getByLabel('Url').fill('https://playwright.dev')
-            await page.getByRole('button', { name: 'Create' }).click()
+            await createBlog(page, 'Playwright Title', 'Playwright Author', 'https://playwright.dev')
 
             await expect(page.getByText('Playwright Title', { exact: true })).toBeVisible()
             await expect(page.getByText('Playwright Author', { exact: true })).toBeVisible()
             await expect(page.getByRole('button', { name: 'view', exact: true })).toBeVisible()
+        })
+
+        test('A blog can be liked', async ({ page }) => {
+            // First create a blog
+            await createBlog(page, 'Like Test Blog', 'Like Test Author', 'https://playwright.dev')
+
+            // View the blog details
+            await page.getByRole('button', { name: 'view', exact: true }).click()
+
+            // Like the blog
+            await page.getByRole('button', { name: 'like', exact: true }).click()
+
+            // Verify the like count is updated
+            await expect(page.getByText('likes 1', { exact: true })).toBeVisible()
         })
     })
 });

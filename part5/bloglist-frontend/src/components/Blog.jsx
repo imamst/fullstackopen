@@ -33,7 +33,7 @@ const Blog = ({ blog, setIsUpdated }) => {
     try {
       await blogService.update(blog.id, {
         ...blog,
-        likes: blog.likes + 1
+        likes: (blog.likes || 0) + 1
       })
 
       setIsUpdated(true)
