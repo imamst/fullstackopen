@@ -48,4 +48,23 @@ describe('Blog app', () => {
             await expect(page.getByText('Wrong credentials')).toBeVisible()
         })
     })
+
+    describe('When logged in', () => {
+        beforeEach(async ({ page }) => {
+            await loginWith(page, 'imamst', 'salainen')
+        })
+        
+        test('A new blog can be created', async ({ page }) => {
+            await page.getByRole('button', { name: 'create new blog', exact: true }).click()
+
+            await page.getByLabel('Title').fill('Playwright Title')
+            await page.getByLabel('Author').fill('Playwright Author')
+            await page.getByLabel('Url').fill('https://playwright.dev')
+            await page.getByRole('button', { name: 'Create' }).click()
+
+            await expect(page.getByText('Playwright Title', { exact: true })).toBeVisible()
+            await expect(page.getByText('Playwright Author', { exact: true })).toBeVisible()
+            await expect(page.getByRole('button', { name: 'view', exact: true })).toBeVisible()
+        })
+    })
 });

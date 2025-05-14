@@ -40,7 +40,7 @@ export const BlogForm = ({ setIsCreated, setSuccessMessage }) => {
       setUrl('')
 
       setIsCreated(true)
-      setSuccessMessage(`a new blog ${title} by ${author} added`)
+      setSuccessMessage(`a new blog ${title} by ${author} has been added`)
     } catch (error) {
       console.log(error)
     } finally {
