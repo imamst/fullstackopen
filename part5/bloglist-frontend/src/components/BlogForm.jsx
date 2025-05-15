@@ -29,7 +29,7 @@ export const BlogForm = ({ setIsCreated, setSuccessMessage }) => {
     blogFormRef.current.toggleVisibility()
 
     try {
-      const response = await blogService.create({
+      await blogService.create({
         title,
         author,
         url

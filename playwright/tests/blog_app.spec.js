@@ -130,5 +130,42 @@ describe('Blog app', () => {
             // Verify delete button is not visible for non-creator
             await expect(page.getByRole('button', { name: 'delete', exact: true })).not.toBeVisible()
         })
+
+        test('Blogs are sorted by likes in descending order', async ({ page }) => {
+            // Create three blogs with different like counts
+            await createBlog(page, 'Most Liked Blog', 'Author 1', 'https://playwright.dev')
+            await expect(page.getByText('has been added')).toBeVisible()
+            await expect(page.getByText('Most Liked Blog', { exact: true })).toBeVisible()
+
+            await createBlog(page, 'Second Most Liked Blog', 'Author 2', 'https://playwright.dev')
+            await expect(page.getByText('has been added')).toBeVisible()
+            await expect(page.getByText('Second Most Liked Blog', { exact: true })).toBeVisible()
+
+            await createBlog(page, 'Least Liked Blog', 'Author 3', 'https://playwright.dev')
+            await expect(page.getByText('has been added')).toBeVisible()
+            await expect(page.getByText('Least Liked Blog', { exact: true })).toBeVisible()
+
+            const viewButtons = await page.getByRole('button', { name: 'view', exact: true }).all()
+
+            // View and like the first blog twice
+            await viewButtons[0].click()
+            await page.getByRole('button', { name: 'like', exact: true }).click()
+            await page.getByRole('button', { name: 'like', exact: true }).click()
+            await page.getByRole('button', { name: 'hide', exact: true }).click()
+
+            // View and like the second blog once
+            await viewButtons[1].click()
+            await page.getByRole('button', { name: 'like', exact: true }).click()
+            await page.getByRole('button', { name: 'hide', exact: true }).click()
+
+            // Get all blog titles in order
+            const blogTitles = await page.getByText(/Blog$/).allTextContents()
+
+            // Verify the order: Most Liked Blog should be first, then Second Most Liked Blog, then Least Liked Blog
+            expect(blogTitles[0]).toBe('Most Liked Blog')
+            expect(blogTitles[1]).toBe('Second Most Liked Blog')
+            expect(blogTitles[2]).toBe('Least Liked Blog')
+        })
+        
     })
 });
