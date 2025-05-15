@@ -22,13 +22,17 @@ const App = () => {
     if (user?.token || isCreated || isUpdated) {
       blogService.getAll(user?.token)
         .then(blogs =>
-          setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+          setBlogs(
+            blogs
+              .sort((a, b) => b.likes - a.likes)
+              .map(blog => ({ ...blog, canDelete: blog.user.username === user.username }))
+          )
         ).then(() => {
           setIsCreated(false)
           setIsUpdated(false)
         })
     }
-  }, [user?.token, isCreated, isUpdated])
+  }, [user?.token, user?.username, isCreated, isUpdated])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('user')

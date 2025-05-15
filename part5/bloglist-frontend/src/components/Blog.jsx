@@ -75,10 +75,14 @@ const Blog = ({ blog, setIsUpdated }) => {
               onClick={handleLike}
             >like</button>
           </div>
-          <button
-            className="px-4 py-2 text-red-500 font-medium rounded-lg shadow-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-            onClick={handleDelete}
-          >delete</button>
+          {
+            blog.canDelete && (
+              <button
+                className="px-4 py-2 text-red-500 font-medium rounded-lg shadow-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                onClick={handleDelete}
+              >delete</button>
+            )
+          }
         </div>
       )}
     </div>

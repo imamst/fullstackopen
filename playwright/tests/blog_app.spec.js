@@ -98,5 +98,37 @@ describe('Blog app', () => {
             // Verify blog is no longer visible
             await expect(page.getByText('Delete Test Blog', { exact: true })).not.toBeVisible()
         })
+
+        test('Only blog creator can see delete button', async ({ page, request }) => {
+            // Create a second user
+            await request.post('/api/users', {
+                data: {
+                    name: 'Second User',
+                    username: 'seconduser',
+                    password: 'salainen'
+                }
+            })
+
+            // Create a blog as first user
+            await createBlog(page, 'Protected Blog', 'Protected Author', 'https://playwright.dev')
+            
+            // View the blog details
+            await page.getByRole('button', { name: 'view', exact: true }).click()
+            
+            // Verify delete button is visible for creator
+            await expect(page.getByRole('button', { name: 'delete', exact: true })).toBeVisible()
+            
+            // Logout
+            await page.getByRole('button', { name: 'Logout', exact: true }).click()
+            
+            // Login as second user
+            await loginWith(page, 'seconduser', 'salainen')
+            
+            // View the blog details
+            await page.getByRole('button', { name: 'view', exact: true }).click()
+            
+            // Verify delete button is not visible for non-creator
+            await expect(page.getByRole('button', { name: 'delete', exact: true })).not.toBeVisible()
+        })
     })
 });
