@@ -1,14 +1,29 @@
 import { useSelector, useDispatch } from 'react-redux'
+import { useRef } from 'react'
 
 const App = () => {
   const anecdotes = useSelector(state => state)
   const dispatch = useDispatch()
+  const anecdoteRef = useRef(null)
   const vote = (id) => {
     console.log('vote', id)
 
     dispatch({
       type: 'VOTE',
       payload: { id }
+    })
+  }
+
+  const addAnecdote = (event) => {
+    event.preventDefault()
+    const content = anecdoteRef.current.value
+    anecdoteRef.current.value = ''
+
+    console.log('content', content)
+    
+    dispatch({
+      type: 'NEW_ANECDOTE',
+      payload: { content }
     })
   }
 
@@ -27,8 +42,8 @@ const App = () => {
         </div>
       )}
       <h2>create new</h2>
-      <form>
-        <div><input /></div>
+      <form onSubmit={addAnecdote}>
+        <div><input ref={anecdoteRef} /></div>
         <button>create</button>
       </form>
     </div>
