@@ -8,6 +8,7 @@ const notificationSlice = createSlice({
             return action.payload
         },
         removeNotification() {
+            // error: 'A non-serializable value was detected in the state' in console but still worked
             return ''
         }
     }
