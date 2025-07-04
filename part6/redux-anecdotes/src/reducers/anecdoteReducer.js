@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import anecdoteService from '../services/anecdotes'
-import { removeNotification, setNotification } from './notificationReducer'
+import { displayNotification } from './notificationReducer'
 
 const anecdoteSlice = createSlice({
   name: 'anecdotes',
@@ -35,12 +35,11 @@ export const initializeAnecdotes = () => {
 export const createAnecdote = (content) => {
   return async dispatch => {
     const newAnecdote = await anecdoteService.create(content)
-    dispatch(addAnecdote(newAnecdote))
-    dispatch(setNotification(`You created "${content}"`))
-
-    setTimeout(() => {
-        dispatch(removeNotification())
-    }, 5000)
+    dispatch(addAnecdote({
+      ...newAnecdote,
+      votes: 0
+    }))
+    dispatch(displayNotification(`You created "${content}"`), 5000)
   }
 }
 
@@ -48,11 +47,7 @@ export const voteAnecdote = (anecdote) => {
   return async dispatch => {
     await anecdoteService.vote(anecdote)
     dispatch(addVote(anecdote.id))
-    dispatch(setNotification(`You voted "${anecdote.content}"`))
-
-    setTimeout(() => {
-      dispatch(removeNotification())
-    }, 5000)
+    dispatch(displayNotification(`You voted "${anecdote.content}"`, 5000))
   }
 }
 
